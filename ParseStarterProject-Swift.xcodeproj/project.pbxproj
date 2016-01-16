@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		75328C301C49E06600BC04F8 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75328C2F1C49E06600BC04F8 /* Launch Screen.storyboard */; };
+		75328C341C4A06FE00BC04F8 /* Exit.png in Resources */ = {isa = PBXBuildFile; fileRef = 75328C311C4A06FE00BC04F8 /* Exit.png */; };
+		75328C351C4A06FE00BC04F8 /* Exit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 75328C321C4A06FE00BC04F8 /* Exit@2x.png */; };
+		75328C361C4A06FE00BC04F8 /* Exit@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 75328C331C4A06FE00BC04F8 /* Exit@3x.png */; };
+		75328C391C4A07AB00BC04F8 /* RiderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75328C381C4A07AB00BC04F8 /* RiderViewController.swift */; };
+		75328C3B1C4A1E9500BC04F8 /* RiderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75328C3A1C4A1E9500BC04F8 /* RiderRequest.swift */; };
 		814C3ACA1B69877600E307BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 814C3AC61B69877600E307BB /* Main.storyboard */; };
 		814C3ACB1B69877600E307BB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 814C3AC81B69877600E307BB /* Images.xcassets */; };
 		81BA814B1A49DA1800E65899 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BA814A1A49DA1800E65899 /* AppDelegate.swift */; };
@@ -22,6 +27,11 @@
 
 /* Begin PBXFileReference section */
 		75328C2F1C49E06600BC04F8 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		75328C311C4A06FE00BC04F8 /* Exit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Exit.png; path = ../ParseStarterProject/Exit.png; sourceTree = "<group>"; };
+		75328C321C4A06FE00BC04F8 /* Exit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Exit@2x.png"; path = "../ParseStarterProject/Exit@2x.png"; sourceTree = "<group>"; };
+		75328C331C4A06FE00BC04F8 /* Exit@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Exit@3x.png"; path = "../ParseStarterProject/Exit@3x.png"; sourceTree = "<group>"; };
+		75328C381C4A07AB00BC04F8 /* RiderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RiderViewController.swift; sourceTree = "<group>"; };
+		75328C3A1C4A1E9500BC04F8 /* RiderRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RiderRequest.swift; sourceTree = "<group>"; };
 		814C3AC71B69877600E307BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		814C3AC81B69877600E307BB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		814C3AC91B69877600E307BB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -55,11 +65,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		75328C371C4A070E00BC04F8 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				75328C311C4A06FE00BC04F8 /* Exit.png */,
+				75328C321C4A06FE00BC04F8 /* Exit@2x.png */,
+				75328C331C4A06FE00BC04F8 /* Exit@3x.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		75328C3C1C4A1F1900BC04F8 /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				75328C3A1C4A1E9500BC04F8 /* RiderRequest.swift */,
+			);
+			name = DataModel;
+			sourceTree = "<group>";
+		};
 		814C3AC51B69877600E307BB /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				814C3AC81B69877600E307BB /* Images.xcassets */,
 				814C3AC91B69877600E307BB /* Info.plist */,
+				75328C371C4A070E00BC04F8 /* Images */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -85,8 +114,10 @@
 		81BA81471A49DA1800E65899 /* ParseStarterProject */ = {
 			isa = PBXGroup;
 			children = (
+				75328C3C1C4A1F1900BC04F8 /* DataModel */,
 				81BA814A1A49DA1800E65899 /* AppDelegate.swift */,
 				81BA814C1A49DA1800E65899 /* AuthorizationViewController.swift */,
+				75328C381C4A07AB00BC04F8 /* RiderViewController.swift */,
 				814C3AC61B69877600E307BB /* Main.storyboard */,
 				75328C2F1C49E06600BC04F8 /* Launch Screen.storyboard */,
 			);
@@ -174,7 +205,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75328C351C4A06FE00BC04F8 /* Exit@2x.png in Resources */,
 				75328C301C49E06600BC04F8 /* Launch Screen.storyboard in Resources */,
+				75328C341C4A06FE00BC04F8 /* Exit.png in Resources */,
+				75328C361C4A06FE00BC04F8 /* Exit@3x.png in Resources */,
 				814C3ACA1B69877600E307BB /* Main.storyboard in Resources */,
 				814C3ACB1B69877600E307BB /* Images.xcassets in Resources */,
 			);
@@ -187,7 +221,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75328C3B1C4A1E9500BC04F8 /* RiderRequest.swift in Sources */,
 				81BA814D1A49DA1800E65899 /* AuthorizationViewController.swift in Sources */,
+				75328C391C4A07AB00BC04F8 /* RiderViewController.swift in Sources */,
 				81BA814B1A49DA1800E65899 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

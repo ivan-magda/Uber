@@ -27,6 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Enable storing and querying data from Local Datastore.
         // Remove this line if you don't want to use Local Datastore features or want to use cachePolicy.
         Parse.enableLocalDatastore()
+        
+        // Register subclasses.
+        RiderRequest.registerSubclass()
 
         Parse.setApplicationId("bLYgavpwHV5mK6WMQm785SCS3cdH8I6jXqcHdB0a",
             clientKey: "V8isleXUhRsRx6mfZI9nWMX2VZwP2MX5T3zU9b7Q")
@@ -49,22 +52,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // Track an app open here if we launch with a push, unless
             // "content_available" was used to trigger a background push (introduced in iOS 7).
             // In that case, we skip tracking here to avoid double counting the app-open.
-
+            
             let preBackgroundPush = !application.respondsToSelector("backgroundRefreshStatus")
             let oldPushHandlerOnly = !self.respondsToSelector("application:didReceiveRemoteNotification:fetchCompletionHandler:")
-            var noPushPayload = false;
+            var noPushPayload = false
             if let options = launchOptions {
-                noPushPayload = options[UIApplicationLaunchOptionsRemoteNotificationKey] != nil;
+                noPushPayload = options[UIApplicationLaunchOptionsRemoteNotificationKey] != nil
             }
             if (preBackgroundPush || oldPushHandlerOnly || noPushPayload) {
                 PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
             }
         }
         
-        let types: UIUserNotificationType = [.Alert, .Badge, .Sound]
-        let settings = UIUserNotificationSettings(forTypes: types, categories: nil)
-        application.registerUserNotificationSettings(settings)
-        application.registerForRemoteNotifications()
+        if application.respondsToSelector("registerUserNotificationSettings:") {
+            let userNotificationTypes: UIUserNotificationType = [UIUserNotificationType.Alert, UIUserNotificationType.Badge, UIUserNotificationType.Sound]
+            let settings = UIUserNotificationSettings(forTypes: userNotificationTypes, categories: nil)
+            application.registerUserNotificationSettings(settings)
+            application.registerForRemoteNotifications()
+        }
 
         return true
     }
@@ -105,11 +110,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ///////////////////////////////////////////////////////////
     // Uncomment this method if you want to use Push Notifications with Background App Refresh
     ///////////////////////////////////////////////////////////
-     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-         if application.applicationState == UIApplicationState.Inactive {
-             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
-         }
-     }
+//     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+//         if application.applicationState == UIApplicationState.Inactive {
+//             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
+//         }
+//     }
 
     //--------------------------------------
     // MARK: Facebook SDK Integration

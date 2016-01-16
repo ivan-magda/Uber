@@ -123,10 +123,84 @@
                         <outlet property="signUpButton" destination="YTo-Xz-qrE" id="N7f-Mf-fHd"/>
                         <outlet property="toggleSignUpButton" destination="10L-dV-vdq" id="3qO-zL-z6C"/>
                         <outlet property="username" destination="udE-lB-OWG" id="rof-se-gT9"/>
+                        <segue destination="kQV-lo-Fnw" kind="presentation" identifier="loginRider" id="ojJ-cm-Lbs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
         </scene>
+        <!--Uber-->
+        <scene sceneID="F32-6L-DAE">
+            <objects>
+                <viewController id="zTX-Cr-ZEt" customClass="RiderViewController" customModule="ParseStarterProject_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="MxK-uO-anD"/>
+                        <viewControllerLayoutGuide type="bottom" id="fyv-aG-47f"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="UuX-MF-cHF">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="C4R-H1-EcP">
+                                <rect key="frame" x="0.0" y="64" width="320" height="458"/>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DdX-3U-ZiQ">
+                                <rect key="frame" x="118" y="530" width="84" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="OOc-5S-qyi"/>
+                                </constraints>
+                                <state key="normal" title="Call an Uber"/>
+                                <connections>
+                                    <action selector="callAnUber:" destination="zTX-Cr-ZEt" eventType="touchUpInside" id="RIT-OY-Bvp"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="C4R-H1-EcP" firstAttribute="leading" secondItem="UuX-MF-cHF" secondAttribute="leading" id="ChQ-k4-jPM"/>
+                            <constraint firstItem="DdX-3U-ZiQ" firstAttribute="top" secondItem="C4R-H1-EcP" secondAttribute="bottom" constant="8" symbolic="YES" id="DjI-fM-Sgy"/>
+                            <constraint firstItem="C4R-H1-EcP" firstAttribute="top" secondItem="MxK-uO-anD" secondAttribute="bottom" id="NDF-vx-QV9"/>
+                            <constraint firstAttribute="trailing" secondItem="C4R-H1-EcP" secondAttribute="trailing" id="NuA-HE-UtM"/>
+                            <constraint firstItem="fyv-aG-47f" firstAttribute="top" secondItem="DdX-3U-ZiQ" secondAttribute="bottom" constant="8" symbolic="YES" id="Qxd-14-rV9"/>
+                            <constraint firstItem="DdX-3U-ZiQ" firstAttribute="centerX" secondItem="UuX-MF-cHF" secondAttribute="centerX" id="k95-Qi-8wL"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Uber" id="Dqy-ly-RWg">
+                        <barButtonItem key="leftBarButtonItem" image="Exit.png" id="gug-Bx-fVr">
+                            <connections>
+                                <action selector="logOut:" destination="zTX-Cr-ZEt" id="rgd-ET-hYh"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="callUberButton" destination="DdX-3U-ZiQ" id="1xJ-7h-Hbc"/>
+                        <outlet property="mapView" destination="C4R-H1-EcP" id="lwQ-aV-JyO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hpO-Xh-LX9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1170" y="350"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="zUA-jo-VxS">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="kQV-lo-Fnw" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="j2x-bn-FAz">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="zTX-Cr-ZEt" kind="relationship" relationship="rootViewController" id="DBC-XV-WMp"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9qK-ra-tG9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="772" y="350"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="Exit.png" width="22" height="22"/>
+    </resources>
 </document>

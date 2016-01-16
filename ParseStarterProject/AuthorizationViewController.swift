@@ -12,6 +12,19 @@ import Parse
 
 class AuthorizationViewController: UIViewController {
     //--------------------------------------
+    // MARK: - Types
+    //--------------------------------------
+    
+    private enum SegueIdentifier: String {
+        case loginRider
+        case loginDriver
+    }
+    
+    private enum UserKeys: String {
+        case isDriver
+    }
+    
+    //--------------------------------------
     // MARK: - Properties
     //--------------------------------------
     
@@ -39,6 +52,16 @@ class AuthorizationViewController: UIViewController {
         self.password.delegate = self
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if let user = PFUser.currentUser() {
+            if let isDriver = user[UserKeys.isDriver.rawValue] as? Bool {
+                doneOnAuthorization(isDriver: isDriver)
+            }
+        }
+    }
+    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesBegan(touches, withEvent: event)
         
@@ -60,6 +83,26 @@ class AuthorizationViewController: UIViewController {
     }
     
     //--------------------------------------
+    // MARK: - Navigation
+    //--------------------------------------
+    
+    private func doneOnAuthorization(isDriver isDriver: Bool) {
+        if isDriver {
+            self.performSegueWithIdentifier(SegueIdentifier.loginDriver.rawValue, sender: self)
+        } else {
+            self.performSegueWithIdentifier(SegueIdentifier.loginRider.rawValue, sender: self)
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == SegueIdentifier.loginDriver.rawValue {
+            print(SegueIdentifier.loginDriver.rawValue)
+        } else if segue.identifier == SegueIdentifier.loginRider.rawValue {
+            print(SegueIdentifier.loginRider.rawValue)
+        }
+    }
+    
+    //--------------------------------------
     // MARK: - Actions
     //--------------------------------------
     
@@ -69,17 +112,19 @@ class AuthorizationViewController: UIViewController {
         if username.text == "" || password.text == "" {
             displayAlert(title: "Missing Field(s)", message: "Username and password are required", handler: nil)
         } else {
+            let isDriver = self.modeSwitch.on
+            
             if self.isSignUpState {
                 let user = PFUser()
                 user.username = self.username.text
                 user.password = self.password.text
-                user["isDriver"] = self.modeSwitch.on
+                user[UserKeys.isDriver.rawValue] = isDriver
                 
                 user.signUpInBackgroundWithBlock() { (succeeded, error) in
                     if let error = error {
                         self.displayAlert(title: "Sign Up Failed", message: error.localizedDescription, handler: nil)
                     } else {
-                        print("Signup successful")
+                        self.doneOnAuthorization(isDriver: isDriver)
                     }
                 }
             } else {
@@ -87,7 +132,7 @@ class AuthorizationViewController: UIViewController {
                     if let error = error {
                         self.displayAlert(title: "Login Failed", message: error.localizedDescription, handler: nil)
                     } else if let _ = user {
-                        print("Login successful")
+                        self.doneOnAuthorization(isDriver: isDriver)
                     }
                 }
             }
