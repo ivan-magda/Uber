@@ -22,6 +22,8 @@ class RiderRequest: PFObject, PFSubclassing {
     enum Keys: String {
         case username
         case location
+        case driverResponded
+        case createdAt
     }
     
     //--------------------------------------
@@ -33,6 +35,9 @@ class RiderRequest: PFObject, PFSubclassing {
     
     /// Location of the rider.
     @NSManaged var location: PFGeoPoint
+    
+    /// Username of the responded drider.
+    @NSManaged var driverResponded: String
     
     //--------------------------------------
     // MARK: - PFSubclassing
@@ -59,14 +64,13 @@ class RiderRequest: PFObject, PFSubclassing {
     class func cancelAnUberForUser(user: PFUser, block: RiderRequestResultBlock) {
         let query = PFQuery(className: RiderRequestClassName)
         query.whereKey(RiderRequest.Keys.username.rawValue, equalTo: user.username!)
+        query.orderByDescending(RiderRequest.Keys.createdAt.rawValue)
         
         query.findObjectsInBackgroundWithBlock() { (objects, error) in
             if let error = error {
                 block(success: false, error: error)
             } else if let request = objects as? [RiderRequest] {
-                assert(request.count == 1)
-                
-                request[0].deleteInBackgroundWithBlock() { (success, error) in
+                request[request.count - 1].deleteInBackgroundWithBlock() { (success, error) in
                     if success {
                         block(success: true, error: nil)
                     } else {
@@ -87,6 +91,28 @@ class RiderRequest: PFObject, PFSubclassing {
                 block(success: false, error: error)
             } else {
                 block(success: true, error: nil)
+            }
+        }
+    }
+    
+    class func respondForRiderRequest(riderUsername rider: String, driverUsername driver: String, block: RiderRequestResultBlock) {
+        let query = PFQuery(className: RiderRequestClassName)
+        query.whereKey(RiderRequest.Keys.username.rawValue, equalTo: rider)
+        
+        query.findObjectsInBackgroundWithBlock() { (objects, error) in
+            if let error = error {
+                block(success: false, error: error)
+            } else if let requests = objects as? [RiderRequest] {
+                let request = requests[requests.count - 1]
+                request.driverResponded = driver
+                
+                request.saveInBackgroundWithBlock() { (success, error) in
+                    if success {
+                        block(success: true, error: nil)
+                    } else {
+                        block(success: false, error: error)
+                    }
+                }
             }
         }
     }

@@ -23,6 +23,11 @@ class RiderViewController: UIViewController {
     
     private var isRiderRequestActive = false
     
+    /// If user call for Uber and request is created for Parse API, but callback
+    /// doesn't invoke eyet, then we are using this variable for determine can we
+    /// create another request or need to wait for callback of the previous request.
+    private var isRequesting = false
+    
     //--------------------------------------
     // MARK: - View Life Cycle
     //--------------------------------------
@@ -66,7 +71,7 @@ class RiderViewController: UIViewController {
     }
     
     @IBAction func callAnUber(sender: AnyObject) {
-        guard let user = PFUser.currentUser() else {
+        guard let user = PFUser.currentUser() where isRequesting == false else {
             return
         }
         

@@ -24,6 +24,19 @@ class AuthorizationViewController: UIViewController {
         case isDriver
     }
     
+    private enum UserRole: String {
+        case Rider
+        case Driver
+        
+        static func isDriver(driver: Bool) -> UserRole {
+            if driver {
+                return .Driver
+            } else {
+                return .Rider
+            }
+        }
+    }
+    
     //--------------------------------------
     // MARK: - Properties
     //--------------------------------------
@@ -57,7 +70,7 @@ class AuthorizationViewController: UIViewController {
         
         if let user = PFUser.currentUser() {
             if let isDriver = user[UserKeys.isDriver.rawValue] as? Bool {
-                doneOnAuthorization(isDriver: isDriver)
+                doneOnAuthorizationWithUserRole(UserRole.isDriver(isDriver))
             }
         }
     }
@@ -86,10 +99,11 @@ class AuthorizationViewController: UIViewController {
     // MARK: - Navigation
     //--------------------------------------
     
-    private func doneOnAuthorization(isDriver isDriver: Bool) {
-        if isDriver {
+    private func doneOnAuthorizationWithUserRole(role: UserRole) {
+        switch role {
+        case .Driver:
             self.performSegueWithIdentifier(SegueIdentifier.loginDriver.rawValue, sender: self)
-        } else {
+        case .Rider:
             self.performSegueWithIdentifier(SegueIdentifier.loginRider.rawValue, sender: self)
         }
     }
@@ -112,9 +126,9 @@ class AuthorizationViewController: UIViewController {
         if username.text == "" || password.text == "" {
             displayAlert(title: "Missing Field(s)", message: "Username and password are required", handler: nil)
         } else {
-            let isDriver = self.modeSwitch.on
-            
             if self.isSignUpState {
+                let isDriver = self.modeSwitch.on
+                
                 let user = PFUser()
                 user.username = self.username.text
                 user.password = self.password.text
@@ -124,15 +138,17 @@ class AuthorizationViewController: UIViewController {
                     if let error = error {
                         self.displayAlert(title: "Sign Up Failed", message: error.localizedDescription, handler: nil)
                     } else {
-                        self.doneOnAuthorization(isDriver: isDriver)
+                        self.doneOnAuthorizationWithUserRole(UserRole.isDriver(isDriver))
                     }
                 }
             } else {
                 PFUser.logInWithUsernameInBackground(self.username.text!, password: self.password.text!) { (user, error) in
                     if let error = error {
                         self.displayAlert(title: "Login Failed", message: error.localizedDescription, handler: nil)
-                    } else if let _ = user {
-                        self.doneOnAuthorization(isDriver: isDriver)
+                    } else if let user = user {
+                        let isDriver = user[UserKeys.isDriver.rawValue] as! Bool
+                        
+                        self.doneOnAuthorizationWithUserRole(UserRole.isDriver(isDriver))
                     }
                 }
             }
