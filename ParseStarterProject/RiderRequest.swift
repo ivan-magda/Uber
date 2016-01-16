@@ -12,6 +12,8 @@ import Parse
 /// Class name of the RiderRequest object.
 let RiderRequestClassName = "RiderRequest"
 
+public typealias RiderRequestResultBlock = (success: Bool, error: NSError?) -> Void
+
 class RiderRequest: PFObject, PFSubclassing {
     //--------------------------------------
     // MARK: - Types
@@ -48,5 +50,44 @@ class RiderRequest: PFObject, PFSubclassing {
     /// The class name of the object.
     class func parseClassName() -> String {
         return RiderRequestClassName
+    }
+    
+    //--------------------------------------
+    // MARK: - Requests
+    //--------------------------------------
+    
+    class func cancelAnUberForUser(user: PFUser, block: RiderRequestResultBlock) {
+        let query = PFQuery(className: RiderRequestClassName)
+        query.whereKey(RiderRequest.Keys.username.rawValue, equalTo: user.username!)
+        
+        query.findObjectsInBackgroundWithBlock() { (objects, error) in
+            if let error = error {
+                block(success: false, error: error)
+            } else if let request = objects as? [RiderRequest] {
+                assert(request.count == 1)
+                
+                request[0].deleteInBackgroundWithBlock() { (success, error) in
+                    if success {
+                        block(success: true, error: nil)
+                    } else {
+                        block(success: false, error: error)
+                    }
+                }
+            }
+        }
+    }
+    
+    class func requestAnUberForUser(user: PFUser, withLocationCoordinate coordinate: CLLocationCoordinate2D, block: RiderRequestResultBlock) {
+        let riderRequest = RiderRequest()
+        riderRequest.username = user.username!
+        riderRequest.location = PFGeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        
+        riderRequest.saveInBackgroundWithBlock() { (success, error) in
+            if let error = error {
+                block(success: false, error: error)
+            } else {
+                block(success: true, error: nil)
+            }
+        }
     }
 }

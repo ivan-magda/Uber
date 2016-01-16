@@ -52,56 +52,6 @@ class RiderViewController: UIViewController {
     }
     
     //--------------------------------------
-    // MARK: Rider requests
-    //--------------------------------------
-    
-    private func cancelAnUberForUser(user: PFUser) {
-        let query = PFQuery(className: RiderRequestClassName)
-        query.whereKey(RiderRequest.Keys.username.rawValue, equalTo: user.username!)
-        
-        query.findObjectsInBackgroundWithBlock() { (objects, error) in
-            if let _ = error {
-                self.displayAlert(title: "Could't cancel Uber", message: "Please try again later")
-            } else if let request = objects as? [RiderRequest] {
-                assert(request.count == 1)
-                
-                request[0].deleteInBackgroundWithBlock() { (success, error) in
-                    if success {
-                        self.isRiderRequestActive = false
-                        
-                        self.displayAlert(title: "Success", message: "Your Uber is canceled")
-                        self.callUberButton.setTitle("Call an Uber", forState: .Normal)
-                    } else {
-                        print(error!.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
-    
-    private func requestAnUberForUser(user: PFUser) {
-        if let coordinate = self.previousLocation {
-            let riderRequest = RiderRequest()
-            riderRequest.username = user.username!
-            riderRequest.location = PFGeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
-            
-            riderRequest.saveInBackgroundWithBlock() { (success, error) in
-                if let error = error {
-                    self.displayAlert(title: "Could not call Uber", message: error.localizedDescription)
-                } else {
-                    self.isRiderRequestActive = true
-                    
-                    self.displayAlert(title: "Success", message: "Your Uber is in progress")
-                    self.callUberButton.setTitle("Cancel Uber", forState: .Normal)
-                }
-            }
-        } else {
-            displayAlert(title: "Could not call Uber", message: "Could not update your current location. Please, try again later.")
-        }
-        
-    }
-    
-    //--------------------------------------
     // MARK: - Actions
     //--------------------------------------
     
@@ -114,16 +64,38 @@ class RiderViewController: UIViewController {
             }
         }
     }
-
+    
     @IBAction func callAnUber(sender: AnyObject) {
         guard let user = PFUser.currentUser() else {
             return
         }
         
         if isRiderRequestActive {
-            cancelAnUberForUser(user)
+            RiderRequest.cancelAnUberForUser(user) { (success, error) in
+                if success {
+                    self.isRiderRequestActive = false
+                    
+                    self.displayAlert(title: "Success", message: "Your Uber is canceled")
+                    self.callUberButton.setTitle("Call an Uber", forState: .Normal)
+                } else {
+                    self.displayAlert(title: "Could't cancel Uber", message: "Please try again later")
+                }
+            }
         } else {
-            requestAnUberForUser(user)
+            if let coordinate = self.previousLocation {
+                RiderRequest.requestAnUberForUser(user, withLocationCoordinate: coordinate) { (success, error) in
+                    if success {
+                        self.isRiderRequestActive = true
+                        
+                        self.displayAlert(title: "Success", message: "Your Uber is in progress")
+                        self.callUberButton.setTitle("Cancel Uber", forState: .Normal)
+                    } else if let error = error {
+                        self.displayAlert(title: "Could't call Uber", message: error.localizedDescription)
+                    }
+                }
+            } else {
+                displayAlert(title: "Could't call Uber", message: "Could't update your current location. Please, try again later.")
+            }
         }
     }
 }
