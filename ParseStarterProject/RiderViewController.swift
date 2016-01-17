@@ -28,6 +28,8 @@ class RiderViewController: UIViewController {
     /// create another request or need to wait for callback of the previous request.
     private var isRequesting = false
     
+    private var driverIsOnTheWay = false
+    
     //--------------------------------------
     // MARK: - View Life Cycle
     //--------------------------------------
@@ -112,22 +114,72 @@ class RiderViewController: UIViewController {
 extension RiderViewController: CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let coordinate = manager.location?.coordinate {
-            self.mapView.setRegion(MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)), animated: true)
+            let query = PFQuery(className: RiderRequest.parseClassName())
+            query.whereKey(RiderRequest.Keys.username.rawValue, equalTo: PFUser.currentUser()!.username!)
+            query.whereKey(RiderRequest.Keys.driverResponded.rawValue, notEqualTo: "")
             
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
-            annotation.title = NSLocalizedString("Your location", comment: "")
+            query.findObjectsInBackgroundWithBlock() { (requests, error) in
+                if let error = error {
+                    print(error.localizedDescription)
+                } else if let requests = requests as? [RiderRequest] where requests.count > 0 {
+                    DriverLocation.getDriverLocationFromUsername(requests[0].driverResponded, block: { (location, error) in
+                        if let error = error {
+                            print(error.localizedDescription)
+                        } else if let location = location {
+                            let driverLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
+                            
+                            let distanceInMeters = manager.location!.distanceFromLocation(driverLocation)
+                            let distanceInKm = round((distanceInMeters / 1000.0) * 10.0) / 10.0
+                            
+                            self.callUberButton.setTitle("Driver is \(distanceInKm) the Way", forState: .Normal)
+                            
+                            self.driverIsOnTheWay = true
+                            
+                            self.updateMapViewWithCoordinates(riderCoordinate: coordinate, driverCoordinate: CLLocationCoordinate2DMake(location.latitude, location.longitude))
+                        }
+                    })
+                } else {
+                    self.driverIsOnTheWay = false
+                    self.callUberButton.setTitle("Call an Uber", forState: .Normal)
+                }
+            }
             
-            if self.previousLocation == nil {
-                self.previousLocation = coordinate
-                mapView.addAnnotation(annotation)
-            } else if self.previousLocation!.latitude != coordinate.latitude &&
-                self.previousLocation!.longitude != coordinate.longitude {
-                    mapView.removeAnnotations(mapView.annotations)
-                    mapView.addAnnotation(annotation)
+            if driverIsOnTheWay == false {
+                updateMapViewWithCoordinates(riderCoordinate: coordinate, driverCoordinate: nil)
             }
             
             self.previousLocation = coordinate
+        }
+    }
+    
+    private func updateMapViewWithCoordinates(riderCoordinate riderCoordinate: CLLocationCoordinate2D, driverCoordinate: CLLocationCoordinate2D?) {
+        if let driverCoordinate = driverCoordinate {
+            let latDelta = abs(riderCoordinate.latitude - driverCoordinate.latitude)   * 2 + 0.005
+            let lonDelta = abs(riderCoordinate.longitude - driverCoordinate.longitude) * 2 + 0.005
+            
+            self.mapView.setRegion(MKCoordinateRegion(center: riderCoordinate, span: MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)), animated: true)
+        } else {
+            self.mapView.setRegion(MKCoordinateRegion(center: riderCoordinate, span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)), animated: true)
+        }
+        
+        mapView.removeAnnotations(mapView.annotations)
+        
+        let riderAnnotation = MKPointAnnotation()
+        riderAnnotation.coordinate = riderCoordinate
+        riderAnnotation.title = "Your location"
+        
+        if self.previousLocation == nil {
+            self.previousLocation = riderCoordinate
+        }
+        
+        mapView.addAnnotation(riderAnnotation)
+        
+        if let driverCoordinate = driverCoordinate {
+            let driverAnnotation = MKPointAnnotation()
+            driverAnnotation.coordinate = driverCoordinate
+            driverAnnotation.title = "Driver location"
+            
+            self.mapView.addAnnotation(driverAnnotation)
         }
     }
 }

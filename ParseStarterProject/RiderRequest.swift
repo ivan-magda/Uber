@@ -9,10 +9,7 @@
 import Foundation
 import Parse
 
-/// Class name of the RiderRequest object.
-let RiderRequestClassName = "RiderRequest"
-
-public typealias RiderRequestResultBlock = (success: Bool, error: NSError?) -> Void
+public typealias RequestResultBlock = (success: Bool, error: NSError?) -> Void
 
 class RiderRequest: PFObject, PFSubclassing {
     //--------------------------------------
@@ -33,7 +30,7 @@ class RiderRequest: PFObject, PFSubclassing {
     /// Username of the rider.
     @NSManaged var username: String
     
-    /// Location of the rider.
+    /// Current location of the rider.
     @NSManaged var location: PFGeoPoint
     
     /// Username of the responded drider.
@@ -52,17 +49,17 @@ class RiderRequest: PFObject, PFSubclassing {
         }
     }
     
-    /// The class name of the object.
+    /// Class name of the RiderRequest object.
     class func parseClassName() -> String {
-        return RiderRequestClassName
+        return "RiderRequest"
     }
     
     //--------------------------------------
     // MARK: - Requests
     //--------------------------------------
     
-    class func cancelAnUberForUser(user: PFUser, block: RiderRequestResultBlock) {
-        let query = PFQuery(className: RiderRequestClassName)
+    class func cancelAnUberForUser(user: PFUser, block: RequestResultBlock) {
+        let query = PFQuery(className: RiderRequest.parseClassName())
         query.whereKey(RiderRequest.Keys.username.rawValue, equalTo: user.username!)
         query.orderByDescending(RiderRequest.Keys.createdAt.rawValue)
         
@@ -81,7 +78,7 @@ class RiderRequest: PFObject, PFSubclassing {
         }
     }
     
-    class func requestAnUberForUser(user: PFUser, withLocationCoordinate coordinate: CLLocationCoordinate2D, block: RiderRequestResultBlock) {
+    class func requestAnUberForUser(user: PFUser, withLocationCoordinate coordinate: CLLocationCoordinate2D, block: RequestResultBlock) {
         let riderRequest = RiderRequest()
         riderRequest.username = user.username!
         riderRequest.location = PFGeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
@@ -95,8 +92,8 @@ class RiderRequest: PFObject, PFSubclassing {
         }
     }
     
-    class func respondForRiderRequest(riderUsername rider: String, driverUsername driver: String, block: RiderRequestResultBlock) {
-        let query = PFQuery(className: RiderRequestClassName)
+    class func respondForRiderRequest(riderUsername rider: String, driverUsername driver: String, block: RequestResultBlock) {
+        let query = PFQuery(className: RiderRequest.parseClassName())
         query.whereKey(RiderRequest.Keys.username.rawValue, equalTo: rider)
         
         query.findObjectsInBackgroundWithBlock() { (objects, error) in

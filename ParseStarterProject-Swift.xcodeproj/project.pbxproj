@@ -15,6 +15,7 @@
 		75328C3B1C4A1E9500BC04F8 /* RiderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75328C3A1C4A1E9500BC04F8 /* RiderRequest.swift */; };
 		75328C3E1C4A70BF00BC04F8 /* DriverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75328C3D1C4A70BF00BC04F8 /* DriverTableViewController.swift */; };
 		75328C401C4A86CB00BC04F8 /* RequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75328C3F1C4A86CB00BC04F8 /* RequestViewController.swift */; };
+		75F319551C4B4609003095EC /* DriverLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F319541C4B4609003095EC /* DriverLocation.swift */; };
 		814C3ACA1B69877600E307BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 814C3AC61B69877600E307BB /* Main.storyboard */; };
 		814C3ACB1B69877600E307BB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 814C3AC81B69877600E307BB /* Images.xcassets */; };
 		81BA814B1A49DA1800E65899 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BA814A1A49DA1800E65899 /* AppDelegate.swift */; };
@@ -36,6 +37,7 @@
 		75328C3A1C4A1E9500BC04F8 /* RiderRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RiderRequest.swift; sourceTree = "<group>"; };
 		75328C3D1C4A70BF00BC04F8 /* DriverTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverTableViewController.swift; sourceTree = "<group>"; };
 		75328C3F1C4A86CB00BC04F8 /* RequestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestViewController.swift; sourceTree = "<group>"; };
+		75F319541C4B4609003095EC /* DriverLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverLocation.swift; sourceTree = "<group>"; };
 		814C3AC71B69877600E307BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		814C3AC81B69877600E307BB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		814C3AC91B69877600E307BB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -83,8 +85,20 @@
 			isa = PBXGroup;
 			children = (
 				75328C3A1C4A1E9500BC04F8 /* RiderRequest.swift */,
+				75F319541C4B4609003095EC /* DriverLocation.swift */,
 			);
 			name = DataModel;
+			sourceTree = "<group>";
+		};
+		75F319531C4B3E52003095EC /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				81BA814C1A49DA1800E65899 /* AuthorizationViewController.swift */,
+				75328C381C4A07AB00BC04F8 /* RiderViewController.swift */,
+				75328C3D1C4A70BF00BC04F8 /* DriverTableViewController.swift */,
+				75328C3F1C4A86CB00BC04F8 /* RequestViewController.swift */,
+			);
+			name = ViewControllers;
 			sourceTree = "<group>";
 		};
 		814C3AC51B69877600E307BB /* Resources */ = {
@@ -118,12 +132,9 @@
 		81BA81471A49DA1800E65899 /* ParseStarterProject */ = {
 			isa = PBXGroup;
 			children = (
-				75328C3C1C4A1F1900BC04F8 /* DataModel */,
 				81BA814A1A49DA1800E65899 /* AppDelegate.swift */,
-				81BA814C1A49DA1800E65899 /* AuthorizationViewController.swift */,
-				75328C381C4A07AB00BC04F8 /* RiderViewController.swift */,
-				75328C3D1C4A70BF00BC04F8 /* DriverTableViewController.swift */,
-				75328C3F1C4A86CB00BC04F8 /* RequestViewController.swift */,
+				75328C3C1C4A1F1900BC04F8 /* DataModel */,
+				75F319531C4B3E52003095EC /* ViewControllers */,
 				814C3AC61B69877600E307BB /* Main.storyboard */,
 				75328C2F1C49E06600BC04F8 /* Launch Screen.storyboard */,
 			);
@@ -185,6 +196,11 @@
 				TargetAttributes = {
 					81BA81441A49DA1800E65899 = {
 						CreatedOnToolsVersion = 6.1.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -232,6 +248,7 @@
 				75328C3E1C4A70BF00BC04F8 /* DriverTableViewController.swift in Sources */,
 				75328C391C4A07AB00BC04F8 /* RiderViewController.swift in Sources */,
 				81BA814B1A49DA1800E65899 /* AppDelegate.swift in Sources */,
+				75F319551C4B4609003095EC /* DriverLocation.swift in Sources */,
 				75328C401C4A86CB00BC04F8 /* RequestViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

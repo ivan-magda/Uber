@@ -41,6 +41,16 @@ class DriverTableViewController: UITableViewController {
         setup()
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        DriverLocation.createDriverLocationIfNeeded(driverUsername: PFUser.currentUser()!.username!, coordinate: self.previousLocationCoordinate ?? CLLocationCoordinate2DMake(0, 0)) { (success, error) in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     //--------------------------------------
     // MARK: - Navigation
     //--------------------------------------
@@ -78,7 +88,7 @@ class DriverTableViewController: UITableViewController {
     //--------------------------------------
     
     func loadObjects() {
-        let query = PFQuery(className: RiderRequestClassName)
+        let query = PFQuery(className: RiderRequest.parseClassName())
         query.limit = 10
         
         if let locationCoordinate = self.previousLocationCoordinate {
@@ -169,6 +179,14 @@ class DriverTableViewController: UITableViewController {
 extension DriverTableViewController: CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let coordinate = manager.location?.coordinate {
+            
+            DriverLocation.updateLocationFromCoordinate(coordinate, driverUsername: PFUser.currentUser()!.username!, block: { (success, error) -> Void in
+                if success {
+                    print("Driver location updated")
+                } else if let error = error {
+                    print("Driver location update is failed with error: \(error.localizedDescription)")
+                }
+            })
             
             if self.previousLocationCoordinate == nil {
                 self.previousLocationCoordinate = coordinate

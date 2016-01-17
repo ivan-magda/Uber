@@ -30,23 +30,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Register subclasses.
         RiderRequest.registerSubclass()
+        DriverLocation.registerSubclass()
 
         Parse.setApplicationId("bLYgavpwHV5mK6WMQm785SCS3cdH8I6jXqcHdB0a",
             clientKey: "V8isleXUhRsRx6mfZI9nWMX2VZwP2MX5T3zU9b7Q")
-        
-        // If you are using Facebook, uncomment and add your FacebookAppID to your bundle's plist as
-        // described here: https://developers.facebook.com/docs/getting-started/facebook-sdk-for-ios/
-        // Uncomment the line inside ParseStartProject-Bridging-Header and the following line here:
-        // PFFacebookUtils.initializeFacebook()
 
         PFUser.enableAutomaticUser()
-
-        let defaultACL = PFACL();
-
-        // If you would like all objects to be private by default, remove this line.
-        defaultACL.publicReadAccess = true
-
-        PFACL.setDefaultACL(defaultACL, withAccessForCurrentUser: true)
 
         if application.applicationState != UIApplicationState.Background {
             // Track an app open here if we launch with a push, unless
@@ -115,15 +104,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
 //         }
 //     }
-
-    //--------------------------------------
-    // MARK: Facebook SDK Integration
-    //--------------------------------------
-
-    ///////////////////////////////////////////////////////////
-    // Uncomment this method if you are using Facebook
-    ///////////////////////////////////////////////////////////
-    // func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
-    //     return FBAppCall.handleOpenURL(url, sourceApplication:sourceApplication, session:PFFacebookUtils.session())
-    // }
+    
 }
