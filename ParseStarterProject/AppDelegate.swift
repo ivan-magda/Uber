@@ -8,11 +8,11 @@
 */
 
 import UIKit
-
 import Parse
 
-// If you want to use any of the UI components, uncomment this line
-// import ParseUI
+// Replace with your keys.
+let parseApplicationID = ""
+let parseClientKey = ""
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -32,8 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         RiderRequest.registerSubclass()
         DriverLocation.registerSubclass()
 
-        Parse.setApplicationId("bLYgavpwHV5mK6WMQm785SCS3cdH8I6jXqcHdB0a",
-            clientKey: "V8isleXUhRsRx6mfZI9nWMX2VZwP2MX5T3zU9b7Q")
+        Parse.setApplicationId(parseApplicationID, clientKey: parseClientKey)
 
         PFUser.enableAutomaticUser()
 
